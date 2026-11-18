@@ -1,0 +1,103 @@
+{
+  "name": "lampa-uncensored-mac",
+  "productName": "Lampa Uncensored",
+  "version": "1.3.0",
+  "description": "Lampa Uncensored — каталог фильмов и сериалов, нативная сборка для macOS",
+  "main": "main.js",
+  "author": "xanymanywka",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --mac",
+    "pack": "electron-builder --mac --dir",
+    "predist": "node scripts/bump-build.js"
+  },
+  "devDependencies": {
+    "electron": "^37.10.3",
+    "electron-builder": "^26.18.0"
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.11"
+  },
+  "build": {
+    "appId": "online.bylampa.uncensored",
+    "productName": "Lampa Uncensored",
+    "copyright": "Lampa Uncensored",
+    "directories": {
+      "output": "dist",
+      "buildResources": "."
+    },
+    "files": [
+      "main.js",
+      "lib/**/*",
+      "preload.js",
+      "shim/**/*",
+      "app/**/*",
+      "package.json",
+      "!**/*.map"
+    ],
+    "asar": true,
+    "mac": {
+      "category": "public.app-category.entertainment",
+      "icon": "icon.icns",
+      "darkModeSupport": true,
+      "minimumSystemVersion": "11.0",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
+      "identity": null,
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false,
+      "entitlements": "entitlements.mac.plist",
+      "entitlementsInherit": "entitlements.mac.plist",
+      "extendInfo": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        },
+        "NSLocalNetworkUsageDescription": "Lampa подключается к локальным плеерам и торрент-серверам в вашей сети.",
+        "LSApplicationCategoryType": "public.app-category.entertainment"
+      }
+    },
+    "dmg": {
+      "title": "Lampa Uncensored ${version}",
+      "contents": [
+        {
+          "x": 140,
+          "y": 190,
+          "type": "file"
+        },
+        {
+          "x": 400,
+          "y": 190,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "xanymanywka",
+        "repo": "apple-lampa-uncensored"
+      }
+    ],
+    "afterPack": "scripts/after-pack.js",
+    "buildVersion": "5",
+    "artifactName": "Lampa-Uncensored-${version}-b${buildVersion}-universal.${ext}"
+  },
+  "allowScripts": {
+    "electron@37.10.3": true
+  }
+}
