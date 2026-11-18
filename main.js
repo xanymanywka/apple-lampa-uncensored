@@ -370,6 +370,16 @@ function buildMenu () {
       ]
     },
     {
+      label: 'Справка',
+      role: 'help',
+      submenu: [
+        { label: 'Сообщество в Telegram · @lampa_plugins_uncensored',
+          click: () => shell.openExternal('https://t.me/lampa_plugins_uncensored') },
+        { label: 'Исходный код и релизы',
+          click: () => shell.openExternal('https://github.com/xanymanywka/apple-lampa-uncensored') }
+      ]
+    },
+    {
       label: 'Окно',
       submenu: [
         { role: 'minimize', label: 'Свернуть' },

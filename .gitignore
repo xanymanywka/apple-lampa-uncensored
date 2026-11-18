@@ -6,3 +6,4 @@ dist/
 .env
 app/fonts/
 .claude/
+build/*.webloc

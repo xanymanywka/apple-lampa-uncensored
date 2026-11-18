@@ -1,7 +1,7 @@
 {
   "name": "lampa-uncensored-mac",
   "productName": "Lampa Uncensored",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Lampa Uncensored — каталог фильмов и сериалов, нативная сборка для macOS",
   "main": "main.js",
   "author": "xanymanywka",
@@ -11,7 +11,9 @@
     "start": "electron .",
     "dist": "electron-builder --mac",
     "pack": "electron-builder --mac --dir",
-    "predist": "node scripts/bump-build.js"
+    "predist": "node scripts/bump-build.js && ./scripts/make-webloc.sh",
+    "publish:release": "node scripts/publish.js release",
+    "publish:patch": "node scripts/publish.js patch"
   },
   "devDependencies": {
     "electron": "^37.10.3",
@@ -72,17 +74,30 @@
     },
     "dmg": {
       "title": "Lampa Uncensored ${version}",
+      "background": "build/dmg-background.png",
+      "window": {
+        "width": 660,
+        "height": 508
+      },
+      "iconSize": 96,
+      "iconTextSize": 13,
       "contents": [
         {
-          "x": 140,
-          "y": 190,
+          "x": 190,
+          "y": 188,
           "type": "file"
         },
         {
-          "x": 400,
-          "y": 190,
+          "x": 470,
+          "y": 188,
           "type": "link",
           "path": "/Applications"
+        },
+        {
+          "x": 330,
+          "y": 350,
+          "type": "file",
+          "path": "build/Сообщество в Telegram.webloc"
         }
       ]
     },
@@ -94,7 +109,7 @@
       }
     ],
     "afterPack": "scripts/after-pack.js",
-    "buildVersion": "5",
+    "buildVersion": "11",
     "artifactName": "Lampa-Uncensored-${version}-b${buildVersion}-universal.${ext}"
   },
   "allowScripts": {
