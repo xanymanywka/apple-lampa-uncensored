@@ -108,6 +108,21 @@
     return true
   }
 
+  // Первый запуск: если на маке уже есть плеер, а выбора ещё не было, один раз
+  // говорим, что он есть. Это ровно та жалоба, с которой приходили люди:
+  // «картинка есть, звука нет, а плеер выбрать не могу».
+  setTimeout(function () {
+    try {
+      if (window.__macPlayerPref || localStorage.getItem('mac.playerHint')) return
+      B.players().then(function (st) {
+        if (!st.players.length || !L() || !L().Noty) return
+        localStorage.setItem('mac.playerHint', '1')
+        var names = st.players.slice(0, 3).map(function (p) { return p.name }).join(', ')
+        L().Noty.show('Нашёл плееры: ' + names + '. Если у фильма нет звука, выберите внешний: ⇧⌘P или Настройки → Плеер.', { time: 9000 })
+      })
+    } catch (e) {}
+  }, 15000)
+
   var tries = 0
   var t = setInterval(function () {
     if (install() || ++tries > 120) clearInterval(t)
