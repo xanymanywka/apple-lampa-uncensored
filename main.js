@@ -464,6 +464,37 @@ function setupIpc () {
     return { id: 'custom:' + p, name: entry.name }
   })
 
+  // «Нет звука»: встроенный плеер не знает дорожку. Предлагаем открыть этот же
+  // поток во внешнем плеере одной кнопкой.
+  ipcMain.handle('players:rescue', async (_e, src) => {
+    if (!/^https?:\/\//i.test(String(src || ''))) return null
+    const pref = PREFS_NOW()
+    const list = await players.detect(pref.customPlayers || [])
+    // QuickTime mkv и AC3 тоже не играет — как спасение его не предлагаем
+    const usable = list.filter((p) => p.id !== 'com.apple.QuickTimePlayerX')
+    const pick = usable.find((p) => p.id === pref.player) || usable[0]
+    if (!pick) {
+      dialog.showMessageBox(mainWindow, {
+        type: 'info',
+        message: 'У этого видео нет звука во встроенном плеере',
+        detail: 'Звуковая дорожка (AC3/DTS) не поддерживается. Установите VLC (videolan.org) или IINA (iina.io) — приложение найдёт их само.',
+        buttons: ['ОК']
+      })
+      return null
+    }
+    const { response } = await dialog.showMessageBox(mainWindow, {
+      type: 'question',
+      message: 'У этого видео нет звука во встроенном плеере',
+      detail: 'Дорожка в формате, который встроенный плеер не умеет (AC3/DTS). Во внешнем плеере звук будет.',
+      buttons: [`Открыть в ${pick.name}`, 'Выбрать другой плеер…', 'Закрыть'],
+      defaultId: 0,
+      cancelId: 2
+    })
+    if (response === 0) { await players.play(src, pick); return { opened: pick.name } }
+    if (response === 1) openPlayerPicker()
+    return null
+  })
+
   ipcMain.handle('app:info', () => ({
     version: app.getVersion(), build: BUILD_NUMBER, chromium: process.versions.chrome
   }))
@@ -555,6 +586,7 @@ if (!app.requestSingleInstanceLock()) {
     createWindow()
     if (app.isPackaged) {
       updater.start()
+      app.on('browser-window-focus', () => updater.checkIfStale())
       updater.refreshPatch().then((fresh) => {
         if (fresh && mainWindow && !mainWindow.isDestroyed()) {
           mainWindow.webContents.executeJavaScript(fresh.code, true).catch(() => {})

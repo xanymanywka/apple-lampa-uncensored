@@ -130,16 +130,15 @@
 
   // Нет звука во встроенном плеере: Chromium не декодирует AC3/DTS. Это узнаётся
   // точно — декодированных аудиобайтов ноль при идущем видео. Подсказываем выход.
-  var hinted = false
+  var hinted = {}
   setInterval(function () {
-    if (hinted) return
     var v = document.querySelector('video')
-    if (!v || v.paused || v.currentTime < 4) return
+    if (!v || v.paused || v.currentTime < 4 || !v.currentSrc) return
+    if (hinted[v.currentSrc]) return
     if (v.webkitVideoDecodedByteCount > 0 && v.webkitAudioDecodedByteCount === 0 && !v.muted) {
-      hinted = true
-      try {
-        L().Noty.show('Нет звука? Это кодек, встроенный плеер его не знает. Откройте в VLC или IINA: Настройки → Плеер.')
-      } catch (e) {}
+      hinted[v.currentSrc] = true
+      try { v.pause() } catch (e) {}
+      B.rescue(v.currentSrc)
     }
   }, 2000)
 })()
