@@ -58,9 +58,7 @@ if (PREFS.softwareVideo) {
 }
 
 // package.json упакован в asar, поэтому номер сборки всегда соответствует бандлу
-const BUILD_NUMBER = (() => {
-  try { return require('./package.json').build.buildVersion || '0' } catch { return '0' }
-})()
+const BUILD_NUMBER = String(require('./lib/buildinfo').build)
 
 // Сервер Lampa не отдаёт ни ETag, ни Cache-Control, поэтому Chromium качает
 // app.min.js (2 МБ) и app.css (400 КБ) при каждом запуске заново. Держим свою
@@ -538,7 +536,9 @@ if (!app.requestSingleInstanceLock()) {
       applicationName: 'Lampa Uncensored',
       applicationVersion: app.getVersion(),
       version: `сборка ${BUILD_NUMBER} · Chromium ${process.versions.chrome}`,
-      copyright: 'Каталог фильмов и сериалов'
+      copyright: 'Каталог фильмов и сериалов',
+      credits: 'Сборка для macOS by xanymanywka\nСообщество: t.me/lampa_plugins_uncensored',
+      website: 'https://t.me/lampa_plugins_uncensored'
     })
 
     // пустой catch здесь однажды уже скрыл, что кеш вообще не встаёт

@@ -19,9 +19,6 @@
     "electron": "^37.10.3",
     "electron-builder": "^26.18.0"
   },
-  "dependencies": {
-    "electron-updater": "^6.8.11"
-  },
   "build": {
     "appId": "online.bylampa.uncensored",
     "productName": "Lampa Uncensored",
@@ -32,6 +29,7 @@
     },
     "files": [
       "main.js",
+      "build-info.json",
       "lib/**/*",
       "preload.js",
       "shim/**/*",
@@ -109,7 +107,7 @@
       }
     ],
     "afterPack": "scripts/after-pack.js",
-    "buildVersion": "11",
+    "buildVersion": "12",
     "artifactName": "Lampa-Uncensored-${version}-b${buildVersion}-universal.${ext}"
   },
   "allowScripts": {

@@ -15,4 +15,8 @@ const next = String(Number(pkg.build.buildVersion || 0) + 1)
 pkg.build.buildVersion = next
 
 fs.writeFileSync(file, JSON.stringify(pkg, null, 2) + '\n')
+// В упакованный package.json electron-builder ключ "build" не кладёт, поэтому
+// приложение читает номер сборки из отдельного файла.
+fs.writeFileSync(path.join(__dirname, '..', 'build-info.json'),
+  JSON.stringify({ version: pkg.version, build: Number(next) }, null, 2) + '\n')
 console.log(`сборка ${pkg.version} (build ${next})`)
