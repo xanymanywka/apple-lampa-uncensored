@@ -107,7 +107,7 @@
       }
     ],
     "afterPack": "scripts/after-pack.js",
-    "buildVersion": "14",
+    "buildVersion": "15",
     "artifactName": "Lampa-Uncensored-${version}-b${buildVersion}-universal.${ext}"
   },
   "allowScripts": {
